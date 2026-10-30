@@ -1,0 +1,12 @@
+issue_type,ground_truth,findings,gt_detected,gt_detected_plant_window,true_positive_findings,precision,recall,f1,decision_accuracy,impact_rel_error
+DUPLICATE_READING,13,13,13,13,13,1.0,1.0,1.0,1.0,0.0
+HIERARCHY_TOTAL_MISMATCH,1,1,1,1,1,1.0,1.0,1.0,1.0,0.01
+HIGH_IDLE_CONSUMPTION,2,2,2,2,2,1.0,1.0,1.0,1.0,0.041
+INTENSITY_DRIFT,1,1,1,1,1,1.0,1.0,1.0,1.0,0.396
+MACHINE_OUTSIDE_HIERARCHY,2,2,2,2,2,1.0,1.0,1.0,1.0,0.0
+METER_GAP,2,2,2,2,2,1.0,1.0,1.0,1.0,0.0
+OFF_SHIFT_WASTE,2,2,2,2,2,1.0,1.0,1.0,1.0,0.146
+PEAK_DEMAND_SPIKE,2,2,2,2,2,1.0,1.0,1.0,1.0,0.326
+REGISTER_INTERVAL_MISMATCH,2,2,2,2,2,1.0,1.0,1.0,1.0,0.0
+TARIFF_TZ_MISMATCH,1,1,1,1,1,1.0,1.0,1.0,1.0,
+UNIT_KW_AS_KWH,1,1,1,1,1,1.0,1.0,1.0,1.0,0.0

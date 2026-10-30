@@ -1,0 +1,5 @@
+plant_id,intervals_compared,intervals_flagged,median_unmetered_kw_occupied,median_unmetered_kw_unoccupied
+PLT01,8640,101,36.05,9.35
+PLT02,8640,104,31.88,7.28
+PLT03,8640,0,30.12,8.53
+PLT04,8640,0,34.91,8.44

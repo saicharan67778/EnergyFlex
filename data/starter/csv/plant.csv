@@ -1,0 +1,3 @@
+plant_id,plant_name,city,country_code,timezone,currency,latitude,longitude,status
+PLT01,Pune Forge Works,Pune,IN,Asia/Kolkata,INR,18.52,73.86,ACTIVE
+PLT02,Houston Fabrication,Houston,US,America/Chicago,USD,29.76,-95.37,ACTIVE

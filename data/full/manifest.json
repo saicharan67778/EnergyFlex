@@ -1,0 +1,266 @@
+{
+  "dataset": "energyflex-full",
+  "scale": "full",
+  "seed": 20261022,
+  "generator_command": "python cli.py generate --scale full --seed 20261022",
+  "window_utc": [
+    "2026-01-05T00:00:00Z",
+    "2026-04-05T00:00:00Z"
+  ],
+  "provenance": "100% synthetic; no external data retrieved. See docs/PROVENANCE.md.",
+  "environment": {
+    "python": "3.13.2",
+    "pandas": "2.3.3",
+    "numpy": "2.2.4"
+  },
+  "row_counts": {
+    "plant": 4,
+    "meter": 20,
+    "machine": 21,
+    "meter_machine_map": 21,
+    "shift": 9,
+    "shift_instance": 611,
+    "tariff": 5,
+    "tariff_window": 26,
+    "weather_observation": 8640,
+    "production_batch": 2000,
+    "batch_status_event": 7974,
+    "maintenance_event": 37,
+    "maintenance_status_event": 111,
+    "machine_status_event": 117,
+    "meter_status_event": 46,
+    "machine_state_interval": 7271,
+    "energy_reading": 172610,
+    "ground_truth": 484
+  },
+  "files": [
+    {
+      "path": "csv/batch_status_event.csv",
+      "bytes": 636240,
+      "sha256": "b53128c66e21b6ad0ca53dfee282a497f1e442700346fa3b9b3a2f1eb8f2c728",
+      "rows": 7974
+    },
+    {
+      "path": "csv/energy_reading.csv",
+      "bytes": 23681086,
+      "sha256": "d24464444be3cc5f2b21cc9524abdd586ee03f7c0c8a983bd1a20051375cb8b6",
+      "rows": 172610
+    },
+    {
+      "path": "csv/machine.csv",
+      "bytes": 2378,
+      "sha256": "0f05b656785b9df7b79ef13d162b84bd7f11f402410612c22b1b7071c0eaade0",
+      "rows": 21
+    },
+    {
+      "path": "csv/machine_state_interval.csv",
+      "bytes": 630535,
+      "sha256": "2806d5f110514f4d5f7f41762ae71a2103419eec00a206b4eb216a51af2e6b9b",
+      "rows": 7271
+    },
+    {
+      "path": "csv/machine_status_event.csv",
+      "bytes": 9728,
+      "sha256": "270d690af10f0768087d4d6e3f79230dba1939623a0ab6c2879109116f265807",
+      "rows": 117
+    },
+    {
+      "path": "csv/maintenance_event.csv",
+      "bytes": 6223,
+      "sha256": "bbef03d485996cf7b11046b62d064623c9a92f62cbc6f57d2583545c14ebbd38",
+      "rows": 37
+    },
+    {
+      "path": "csv/maintenance_status_event.csv",
+      "bytes": 7504,
+      "sha256": "a68f612c57d5dfb0ed0b8416110ff5bf0dc97070ec121e5ca10835644be0c4c6",
+      "rows": 111
+    },
+    {
+      "path": "csv/meter.csv",
+      "bytes": 2319,
+      "sha256": "18c26819ef1a29eb1c8db46f9a988095c683de16264b430234e876617ef8d953",
+      "rows": 20
+    },
+    {
+      "path": "csv/meter_machine_map.csv",
+      "bytes": 1476,
+      "sha256": "10c6e98375fdfc49d259bba9a4c57fcf9d4d7501d9fccf6e9d7a17042100f8f4",
+      "rows": 21
+    },
+    {
+      "path": "csv/meter_status_event.csv",
+      "bytes": 3801,
+      "sha256": "53297c140405e1e9f0e2ed472a9a76ed7a78bd55c151b142143af6df980da96f",
+      "rows": 46
+    },
+    {
+      "path": "csv/plant.csv",
+      "bytes": 377,
+      "sha256": "bbbdc002a9ce0f20d082156c69afc3c96d2cb106febfac7a3d0a296ff6ad99c0",
+      "rows": 4
+    },
+    {
+      "path": "csv/production_batch.csv",
+      "bytes": 364511,
+      "sha256": "bf25f8a15c1ec73f276c5cb7bbf85c6d9e7bdd40d3385a1dd348c70c3b493715",
+      "rows": 2000
+    },
+    {
+      "path": "csv/shift.csv",
+      "bytes": 628,
+      "sha256": "c33b275b16bb4108b76539e6902b86b234c3999a54b83ae2d993182a4fcfa6b6",
+      "rows": 9
+    },
+    {
+      "path": "csv/shift_instance.csv",
+      "bytes": 61184,
+      "sha256": "fe0c8796c50146b0ddf2c2fbefa3c1110208038c1d2abd73b32f29bce378b211",
+      "rows": 611
+    },
+    {
+      "path": "csv/tariff.csv",
+      "bytes": 574,
+      "sha256": "b0aa0d493361e1a1d8f54405949490ee1dedcbabb33743c399a3f7965596f506",
+      "rows": 5
+    },
+    {
+      "path": "csv/tariff_window.csv",
+      "bytes": 2112,
+      "sha256": "87a2cd8236ec7c3fd8b7206ea1a77b0efeefe5e299d18ed44438bf7316f08334",
+      "rows": 26
+    },
+    {
+      "path": "csv/weather_observation.csv",
+      "bytes": 692660,
+      "sha256": "985b958a2c3a4985d70cfb75a9d4ac71cfbf272a1fd3d93564ffbc6b7e4cc2dd",
+      "rows": 8640
+    },
+    {
+      "path": "ground_truth/ground_truth.csv",
+      "bytes": 111731,
+      "sha256": "4d9b5f7bef5f9ed2e762b77263b8eabec86e1469be2ec15d6906fbe504c054e9",
+      "rows": 484
+    },
+    {
+      "path": "ground_truth/ground_truth.json",
+      "bytes": 229687,
+      "sha256": "547733bc2f17947d85de4e00e37f0127fa1044d0373b414d37c7de3e59a04ca0",
+      "rows": 484
+    },
+    {
+      "path": "json/batch_status_event.json",
+      "bytes": 1373783,
+      "sha256": "c9f970add8a2c7ddb67755275fb0c15a920c92e1c3212a69325729154b97125c",
+      "rows": 7974
+    },
+    {
+      "path": "json/energy_reading.json",
+      "bytes": 49883298,
+      "sha256": "86ba357441da0aee960450a65e6ee7d78de94e5e5688acde57eb75018e440cf1",
+      "rows": 172610
+    },
+    {
+      "path": "json/machine.json",
+      "bytes": 5839,
+      "sha256": "46bee0f6005fcf1edb66bc01dd216ccc08e20357ed7689f586a4a75bef61b7b4",
+      "rows": 21
+    },
+    {
+      "path": "json/machine_state_interval.json",
+      "bytes": 1364834,
+      "sha256": "c9771c7359d557e27325cfc27f332ac3b695d29c371b75b2e4fdb123cc3d2040",
+      "rows": 7271
+    },
+    {
+      "path": "json/machine_status_event.json",
+      "bytes": 21483,
+      "sha256": "3678e48e5cdce505ff0fb666607b9e183a98cb6b6b3f372ca36868a1a9ca4045",
+      "rows": 117
+    },
+    {
+      "path": "json/maintenance_event.json",
+      "bytes": 12354,
+      "sha256": "5f8ae07d700d4a3ef6778b03ef61cca1bdfc602c5262356bbb1d35dbbadbc069",
+      "rows": 37
+    },
+    {
+      "path": "json/maintenance_status_event.json",
+      "bytes": 17391,
+      "sha256": "e5fe95fde0f008fea87de74d66fcb2794982e097912e0374c081c6677501d79e",
+      "rows": 111
+    },
+    {
+      "path": "json/meter.json",
+      "bytes": 6409,
+      "sha256": "003e2b41386fdc4a20a3493bd4c91e361b9dd4a3f9e9c9191911325983311e8c",
+      "rows": 20
+    },
+    {
+      "path": "json/meter_machine_map.json",
+      "bytes": 3421,
+      "sha256": "f34cb2459d696b637b1ab519b944f3a618f0b1840eb63decefa74b62149742d9",
+      "rows": 21
+    },
+    {
+      "path": "json/meter_status_event.json",
+      "bytes": 7738,
+      "sha256": "3f0e73c7e2759cc8cc411e3e038b10fe854f0e796ce402d501d6bc56f5ab1eb4",
+      "rows": 46
+    },
+    {
+      "path": "json/plant.json",
+      "bytes": 764,
+      "sha256": "0cb4b01147af2d864f162674b502b38e6d0fd65410dff26f55e9b820b642f668",
+      "rows": 4
+    },
+    {
+      "path": "json/production_batch.json",
+      "bytes": 874415,
+      "sha256": "04d43c05ba817dd005cbcf657d44f4a2aa183a3087a28bbe5d63d4d92545575f",
+      "rows": 2000
+    },
+    {
+      "path": "json/shift.json",
+      "bytes": 1529,
+      "sha256": "c02c2c2137e5dc2e1f6b8cc1265587db31801fa9322a532d3c98ae478a7d09e1",
+      "rows": 9
+    },
+    {
+      "path": "json/shift_instance.json",
+      "bytes": 130755,
+      "sha256": "1b38008ed90e8786009ee35b036e2d8fcd9b911ff6e71cea1d389b93415fcc72",
+      "rows": 611
+    },
+    {
+      "path": "json/tariff.json",
+      "bytes": 1238,
+      "sha256": "49a9713e0393c57688820320cb61873354468c5bc50b4c527d1cc35f600ff748",
+      "rows": 5
+    },
+    {
+      "path": "json/tariff_window.json",
+      "bytes": 4664,
+      "sha256": "267f9fc75a483861291f9e33d070b374cf595796db4db96c341610ee78ff25cc",
+      "rows": 26
+    },
+    {
+      "path": "json/weather_observation.json",
+      "bytes": 1677535,
+      "sha256": "057ea40d565f55ad39e73f9b09e82728d69965cba9ef0a24532fe6dff83011e5",
+      "rows": 8640
+    },
+    {
+      "path": "sql/schema.sql",
+      "bytes": 7534,
+      "sha256": "be00eb2ec485cf2ce2df148c6225a0b91a74647281be51fde2d0d8ec55583de9",
+      "rows": null
+    },
+    {
+      "path": "sql/seed.sql",
+      "bytes": 31754550,
+      "sha256": "1fa8dc1f7df14489520a1b161c8e7d438d71725be60a2749c063f396faea7021",
+      "rows": null
+    }
+  ]
+}

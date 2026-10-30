@@ -1,0 +1,6 @@
+tariff_id,plant_id,utility_name,tariff_version,currency,timezone,effective_from,effective_to,demand_charge_per_kw_month
+TAR-2026-001,PLT01,State DISCOM HT-I (synthetic),1,INR,Asia/Kolkata,2026-01-01,,450.0
+TAR-2026-002,PLT02,Gulf Coast Retail TOU-GS (synthetic),1,USD,America/Chicago,2026-01-01,2026-02-28,14.5
+TAR-2026-003,PLT02,Gulf Coast Retail TOU-GS (synthetic),2,USD,UTC,2026-03-01,,15.2
+TAR-2026-004,PLT03,State DISCOM HT-II (synthetic),1,INR,Asia/Kolkata,2026-01-01,,475.0
+TAR-2026-005,PLT04,Stadtwerke Gewerbe HT/NT (synthetic),1,EUR,Europe/Berlin,2026-01-01,,11.0

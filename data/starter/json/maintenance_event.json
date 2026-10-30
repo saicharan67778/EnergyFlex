@@ -1,0 +1,1 @@
+[{"maintenance_id":"MNT-2026-000001","machine_id":"MCH-PLT01-001","plant_id":"PLT01","maintenance_type":"CORRECTIVE","reason":"Rising kWh\/unit; heater\/drive degradation suspected","opened_at":"2026-01-08T22:30:00Z","started_at":"2026-01-11T01:30:00Z","closed_at":"2026-01-11T09:30:00Z","raised_by_role":"maintenance_engineer","downtime_min":480,"status":"CLOSED"}]

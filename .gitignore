@@ -1,0 +1,6 @@
+__pycache__/
+.pytest_cache/
+data/full/json/
+data/full/sql/
+outputs/full/readings_curated.csv
+.vercel

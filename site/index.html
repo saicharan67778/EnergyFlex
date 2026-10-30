@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EnergyFlex Dashboard</title>
+<meta name="description" content="Correlating machine telemetry, production, tariffs and weather to find energy waste and peak demand.">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="logo" aria-hidden="true">⚡</span>
+    <div>
+      <h1>EnergyFlex</h1>
+      <p class="sub" id="subtitle">Energy waste &amp; peak demand — synthetic multi-plant dataset</p>
+    </div>
+  </div>
+  <button id="theme" class="ghost" type="button" aria-label="Toggle colour theme">◐ Theme</button>
+</header>
+
+<nav class="tabs" role="tablist" id="tabs">
+  <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
+  <button role="tab" data-tab="operator">Plant operator</button>
+  <button role="tab" data-tab="engineer">Maintenance / quality</button>
+  <button role="tab" data-tab="planner">Production planner</button>
+  <button role="tab" data-tab="otit">OT / IT admin</button>
+  <button role="tab" data-tab="recs">Recommendations</button>
+</nav>
+
+<main>
+<!-- OVERVIEW -->
+<section id="overview" class="panel active">
+  <div class="kpis" id="kpis"></div>
+  <div class="grid two">
+    <div class="card">
+      <h2>Acceptance criteria</h2>
+      <ul class="checks" id="acceptance"></ul>
+    </div>
+    <div class="card">
+      <h2>Plants</h2>
+      <div class="tablewrap"><table id="plantTable"></table></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="cardhead"><h2>Daily energy at the incomer</h2><span class="hint">kWh per local day</span></div>
+    <div class="chart tall"><canvas id="dailyChart"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>How it works</h2>
+    <ol class="flow">
+      <li><b>Generate</b> masters → shift calendar → tariffs → weather → batches → machine states → 15-min meters (fixed seed).</li>
+      <li><b>Inject</b> labelled edge cases into a copy; labels go to a separate <code>ground_truth.csv</code>.</li>
+      <li><b>Validate</b> keys, joins, enums, ordering, arithmetic, lifecycles — each failure must map to a label.</li>
+      <li><b>Clean</b> duplicates, kW-as-kWh, gaps (register backfill), register drift, hierarchy tags; quarantine bad CTs.</li>
+      <li><b>Analyse</b> TOU cost (plant-local, DST-aware), kWh/unit vs baseline, idle, spikes, off-shift vs weather.</li>
+      <li><b>Recommend</b> actions with measured baseline, savings formula and evidence; <b>evaluate</b> against ground truth.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- OPERATOR -->
+<section id="operator" class="panel">
+  <div class="filters"><label>Plant <select class="plantSel" data-target="operator"></select></label></div>
+  <div class="grid two">
+    <div class="card">
+      <div class="cardhead"><h2>Average load profile</h2><span class="hint">incomer kW by local hour</span></div>
+      <div class="chart"><canvas id="profileChart"></canvas></div>
+      <p class="note" id="profileNote"></p>
+    </div>
+    <div class="card">
+      <div class="cardhead"><h2>Idle energy above standby</h2><span class="hint">kWh, no batch running ≥ 75 min</span></div>
+      <div class="chart"><canvas id="idleChart"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Idle episodes</h2>
+    <div class="tablewrap"><table id="idleTable"></table></div>
+  </div>
+</section>
+
+<!-- ENGINEER -->
+<section id="engineer" class="panel">
+  <div class="filters"><label>Machine <select id="machineSel"></select></label></div>
+  <div class="card">
+    <div class="cardhead"><h2>Energy intensity vs baseline</h2><span class="hint">kWh/unit ÷ (machine, product) baseline, per completed batch</span></div>
+    <div class="chart tall"><canvas id="intensityChart"></canvas></div>
+    <p class="note" id="intensityNote"></p>
+  </div>
+  <div class="grid two">
+    <div class="card">
+      <div class="cardhead"><h2>Off-shift utilities</h2><span class="hint">kWh/day: actual vs weather-normalised expectation</span></div>
+      <div class="filters inline"><label>Plant <select class="plantSel" data-target="engineer"></select></label></div>
+      <div class="chart"><canvas id="offChart"></canvas></div>
+    </div>
+    <div class="card">
+      <h2>Waste findings</h2>
+      <div class="tablewrap short"><table id="engFindings"></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANNER -->
+<section id="planner" class="panel">
+  <div class="filters"><label>Plant <select class="plantSel" data-target="planner"></select></label></div>
+  <div class="card">
+    <div class="cardhead"><h2>Daily energy by tariff period</h2><span class="hint">kWh at the incomer, plant-local time of use</span></div>
+    <div class="chart tall"><canvas id="touChart"></canvas></div>
+  </div>
+  <div class="grid two">
+    <div class="card">
+      <h2>Monthly bill</h2>
+      <div class="tablewrap"><table id="billTable"></table></div>
+      <p class="note">Demand charge = monthly max 15-min kW × rate, pro-rated by the share of the month covered.</p>
+    </div>
+    <div class="card">
+      <h2>Peak demand spikes</h2>
+      <div class="tablewrap"><table id="spikeTable"></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- OT/IT -->
+<section id="otit" class="panel">
+  <div class="kpis" id="dqKpis"></div>
+  <div class="grid two">
+    <div class="card">
+      <div class="cardhead"><h2>Detection vs ground truth</h2><span class="hint">findings matched by entity and time window</span></div>
+      <div class="tablewrap"><table id="evalTable"></table></div>
+    </div>
+    <div class="card">
+      <div class="cardhead"><h2>Validation</h2><span class="hint" id="valHint"></span></div>
+      <div class="tablewrap short"><table id="valTable"></table></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="cardhead"><h2>Data-quality exceptions</h2>
+      <label class="inline">Type <select id="dqSel"></select></label></div>
+    <div class="tablewrap short"><table id="dqTable"></table></div>
+  </div>
+  <div class="card">
+    <div class="cardhead"><h2>Energy balance per meter</h2><span class="hint">interval sum vs register span after detected offsets</span></div>
+    <div class="tablewrap short"><table id="balTable"></table></div>
+  </div>
+</section>
+
+<!-- RECOMMENDATIONS -->
+<section id="recs" class="panel">
+  <div class="filters">
+    <label>Owner <select id="ownerSel"></select></label>
+    <label>Plant <select id="recPlantSel"></select></label>
+  </div>
+  <div id="recList" class="recs"></div>
+</section>
+</main>
+
+<footer>
+  <span id="footMeta"></span> · 100% synthetic data · <a href="https://github.com" id="repoLink">source &amp; docs in the repository README</a>
+</footer>
+<div id="tip" role="tooltip" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>

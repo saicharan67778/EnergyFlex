@@ -1,0 +1,231 @@
+{
+  "headline": {
+    "scale": "full",
+    "window_utc": [
+      "2026-01-05T00:00:00Z",
+      "2026-04-05T00:00:00Z"
+    ],
+    "days": 90,
+    "raw_readings": 172610,
+    "curated_readings": 172800,
+    "findings": {
+      "DUPLICATE_READING": 345,
+      "HIERARCHY_TOTAL_MISMATCH": 3,
+      "HIGH_IDLE_CONSUMPTION": 77,
+      "INTENSITY_DRIFT": 2,
+      "MACHINE_OUTSIDE_HIERARCHY": 4,
+      "METER_GAP": 24,
+      "OFF_SHIFT_WASTE": 3,
+      "PEAK_DEMAND_SPIKE": 16,
+      "REGISTER_INTERVAL_MISMATCH": 5,
+      "TARIFF_TZ_MISMATCH": 1,
+      "UNIT_KW_AS_KWH": 3
+    },
+    "recommendations": 25,
+    "annual_savings_usd": 40437.0,
+    "total_cost_usd": 263493.0,
+    "detection": {
+      "macro_precision": 0.97,
+      "macro_recall": 0.997,
+      "macro_f1": 0.98,
+      "micro_precision": 0.998,
+      "micro_recall": 0.994
+    },
+    "acceptance": {
+      "energy_totals_reconcile": true,
+      "cost_uses_correct_tariff_interval": true,
+      "intensity_normalized_by_output": true,
+      "recommendations_cite_baseline_and_savings": true
+    }
+  },
+  "acceptance": {
+    "energy_totals_reconcile": {
+      "max_abs_meter_difference_pct": 0.0,
+      "meters_within_0.1pct": 20,
+      "meters": 20,
+      "plant_unmetered_pct_range": [
+        12.5,
+        14.14
+      ],
+      "pass": true
+    },
+    "cost_uses_correct_tariff_interval": {
+      "intervals_priced_by_exactly_one_window_pct": 100.0,
+      "unpriced": 0,
+      "ambiguous": 0,
+      "tariff_timezone_mismatches_corrected": 1,
+      "pass": true
+    },
+    "intensity_normalized_by_output": {
+      "completed_batches": 1934,
+      "with_kwh_per_unit_pct": 100.0,
+      "with_baseline_pct": 100.0,
+      "pass": true
+    },
+    "recommendations_cite_baseline_and_savings": {
+      "recommendations": 25,
+      "with_baseline_value": 25,
+      "with_positive_savings": 25,
+      "with_evidence_or_formula": 25,
+      "pass": true
+    }
+  },
+  "evaluation_overall": {
+    "macro_precision": 0.97,
+    "macro_recall": 0.997,
+    "macro_f1": 0.98,
+    "micro_precision": 0.998,
+    "micro_recall": 0.994
+  },
+  "evaluation_by_issue": [
+    {
+      "issue_type": "DUPLICATE_READING",
+      "ground_truth": 345,
+      "findings": 345,
+      "gt_detected": 345,
+      "gt_detected_plant_window": 345,
+      "true_positive_findings": 345,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "decision_accuracy": 1.0,
+      "impact_rel_error": 0.0
+    },
+    {
+      "issue_type": "HIERARCHY_TOTAL_MISMATCH",
+      "ground_truth": 2,
+      "findings": 3,
+      "gt_detected": 2,
+      "gt_detected_plant_window": 2,
+      "true_positive_findings": 3,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "decision_accuracy": 1.0,
+      "impact_rel_error": 0.521
+    },
+    {
+      "issue_type": "HIGH_IDLE_CONSUMPTION",
+      "ground_truth": 80,
+      "findings": 77,
+      "gt_detected": 77,
+      "gt_detected_plant_window": 77,
+      "true_positive_findings": 77,
+      "precision": 1.0,
+      "recall": 0.963,
+      "f1": 0.981,
+      "decision_accuracy": 1.0,
+      "impact_rel_error": 0.141
+    },
+    {
+      "issue_type": "INTENSITY_DRIFT",
+      "ground_truth": 2,
+      "findings": 2,
+      "gt_detected": 2,
+      "gt_detected_plant_window": 2,
+      "true_positive_findings": 2,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "decision_accuracy": 1.0,
+      "impact_rel_error": 0.121
+    },
+    {
+      "issue_type": "MACHINE_OUTSIDE_HIERARCHY",
+      "ground_truth": 4,
+      "findings": 4,
+      "gt_detected": 4,
+      "gt_detected_plant_window": 4,
+      "true_positive_findings": 4,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "decision_accuracy": 1.0,
+      "impact_rel_error": 0.0
+    },
+    {
+      "issue_type": "METER_GAP",
+      "ground_truth": 24,
+      "findings": 24,
+      "gt_detected": 24,
+      "gt_detected_plant_window": 24,
+      "true_positive_findings": 24,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "decision_accuracy": 1.0,
+      "impact_rel_error": 0.0
+    },
+    {
+      "issue_type": "OFF_SHIFT_WASTE",
+      "ground_truth": 2,
+      "findings": 3,
+      "gt_detected": 2,
+      "gt_detected_plant_window": 2,
+      "true_positive_findings": 2,
+      "precision": 0.667,
+      "recall": 1.0,
+      "f1": 0.8,
+      "decision_accuracy": 1.0,
+      "impact_rel_error": 0.505
+    },
+    {
+      "issue_type": "PEAK_DEMAND_SPIKE",
+      "ground_truth": 16,
+      "findings": 16,
+      "gt_detected": 16,
+      "gt_detected_plant_window": 16,
+      "true_positive_findings": 16,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "decision_accuracy": 1.0,
+      "impact_rel_error": 0.313
+    },
+    {
+      "issue_type": "REGISTER_INTERVAL_MISMATCH",
+      "ground_truth": 5,
+      "findings": 5,
+      "gt_detected": 5,
+      "gt_detected_plant_window": 5,
+      "true_positive_findings": 5,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "decision_accuracy": 1.0,
+      "impact_rel_error": 0.0
+    },
+    {
+      "issue_type": "TARIFF_TZ_MISMATCH",
+      "ground_truth": 1,
+      "findings": 1,
+      "gt_detected": 1,
+      "gt_detected_plant_window": 1,
+      "true_positive_findings": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "decision_accuracy": 1.0,
+      "impact_rel_error": NaN
+    },
+    {
+      "issue_type": "UNIT_KW_AS_KWH",
+      "ground_truth": 3,
+      "findings": 3,
+      "gt_detected": 3,
+      "gt_detected_plant_window": 3,
+      "true_positive_findings": 3,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "decision_accuracy": 1.0,
+      "impact_rel_error": 0.0
+    }
+  ],
+  "currencies": {
+    "PLT01": "INR",
+    "PLT02": "USD",
+    "PLT03": "INR",
+    "PLT04": "EUR"
+  }
+}
