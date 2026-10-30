@@ -1,5 +1,7 @@
 # EnergyFlex — energy waste & peak demand correlation
 
+**Live dashboard:** https://energyflex.vercel.app
+
 Correlates machine telemetry, production batches, time-of-use tariffs and weather across 4 plants / 20 meters /
 90 days of 15-minute readings / 2,000 batches to find energy waste and peak demand. The data is 100% synthetic and
 generated with a fixed seed.
