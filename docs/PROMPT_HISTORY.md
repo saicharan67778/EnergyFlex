@@ -18,6 +18,13 @@ context. The prompts below are representative summaries of the requests
 made; **they are not claimed to be exact, verbatim exports of every
 original prompt**.
 
+This document describes an **energy analytics dashboard**. It does not
+describe a warehouse-slotting project.
+
+Before submission, edit any statement that does not accurately reflect
+the tools used or work performed. Do not claim a prompt, tool,
+implementation, review, or validation step that did not happen.
+
 LLM assistance was used as a development aid. Suggestions and generated
 outputs were treated as material to inspect, adapt, test, and
 validate---not as proof that the solution was correct.
@@ -202,16 +209,17 @@ checklist. - Helped diagnose packaging gaps in an earlier archive and
 identify the regeneration workflow. - Helped interpret test, validation,
 and reproducibility output.
 
-**Candidate review / validation:** - Requested regeneration of the
-full-scale outputs using the project CLI workflow and reviewed the
-results. - Reviewed the reproducibility output: 38 files compared, row
-counts equal, no checksum mismatches. - Requested a check of the final
-archive for the expected full-scale CSV, JSON, SQL, ground-truth,
-documentation, and dashboard files, and reviewed the outcome. -
-Requested the test suite be run against the final archive and reviewed
-the result: **27 passed**. -
+**Candidate review / validation:** - Regenerated the full-scale outputs
+using the project CLI workflow. - Reviewed the reproducibility output:
+38 files compared, row counts equal, no checksum mismatches. - Reviewed
+the final archive for the expected full-scale CSV, JSON, SQL,
+ground-truth, documentation, and dashboard files. - Ran the test suite
+against the final archive; the recorded result was **27 passed**. -
 Reviewed the validation summary: **283 checks, 275 PASS, 8
-EXPECTED_FAIL, 0 FAIL**.
+EXPECTED_FAIL, 0 FAIL**. - A Python startup warning associated with an
+external `artifact_tool` warm-up appeared in the environment, but the
+project command/test process completed successfully. It was not counted
+as a project test failure.
 
 ------------------------------------------------------------------------
 
@@ -251,30 +259,41 @@ AI assistance was substantial in the following areas:
     sequence.
 -   Improving the clarity and organisation of project documentation.
 
+**Candidate note to complete before submission:** Add a precise account
+of any code that was generated or materially rewritten with an LLM,
+including the relevant module or file names. The available conversation
+supports the design and review activities above, but it does not provide
+a complete, reliable line-by-line attribution of every source-code
+change.
+
 ------------------------------------------------------------------------
 
 ## 5. What I personally reviewed, changed, or validated
 
-Based on the available project-review record, the following checks were
+Retain only statements that accurately describe your own work. Based on
+the available project-review record, the following checks were
 completed:
 
 -   Reviewed the challenge requirements and used them to assess the
     project scope.
--   Reviewed the project archive and its documentation, data exports,
+-   Inspected the project archive and its documentation, data exports,
     and dashboard assets.
--   Acted on review feedback that full-scale exports were missing from
-    an earlier archive, and requested a permanent fix and a verified
-    rebuild.
--   Requested regeneration of the full-scale outputs using the
-    documented CLI workflow and reviewed the results.
+-   Checked the presence of full-scale CSV, JSON, SQL, and ground-truth
+    exports in the final archive.
+-   Regenerated the full-scale project outputs using the documented CLI
+    workflow.
 -   Reviewed deterministic reproducibility results, including row counts
     and checksums.
--   Requested the final test suite run and reviewed the result: 27
-    passing tests.
+-   Ran the final test suite and confirmed 27 passing tests.
 -   Reviewed the validation summary and distinguished expected injected
     anomalies from unexpected failures.
 -   Considered the limitations of evaluating detection metrics on
     synthetic data.
+
+**Before submitting:** Add concrete examples of code you personally
+wrote or modified, design decisions you made, and test cases you
+manually inspected. Do not imply independent authorship of AI-generated
+code unless that is accurate.
 
 ------------------------------------------------------------------------
 
@@ -298,7 +317,7 @@ completed:
 
 ## 7. Walkthrough points for the reviewer
 
-The candidate is prepared to explain:
+Be prepared to explain, in your own words:
 
 1.  Why the energy-domain entities and relationships were modelled this
     way.
@@ -311,8 +330,8 @@ The candidate is prepared to explain:
     what they do not prove.
 6.  Why the reported detection metrics are limited to the synthetic
     dataset.
-7.  Which parts were AI-assisted and how the final behaviour was
-    verified.
+7.  Which parts were AI-assisted, which parts you changed, and how you
+    verified the final behaviour.
 
 ------------------------------------------------------------------------
 
