@@ -20,7 +20,9 @@ Seed: `20261022` (`--seed N` to change). Generator command and checksums: `data/
 - `energyflex/generate/` — masters → shift calendar → tariffs → weather → maintenance → batches → machine states → meters, then labelled edge cases (`anomalies.py`)
 - `energyflex/validate.py` — 283 checks; every failure must match a ground-truth label (FAIL = unexplained)
 - `energyflex/analytics/` — quality gate, reconciliation, tariff costing, intensity, waste, recommendations, evaluation
-- `data/<scale>/` — `csv/`, `json/`, `sql/schema.sql` + `seed.sql`, `ground_truth/` (kept separate), `manifest.json`, `validation_summary.md`, `repro_report.json`
+- `data/<scale>/` — `csv/`, `json/`, `sql/schema.sql` + `seed.sql`, `ground_truth/` (kept separate), `manifest.json`, `validation_summary.md`, `repro_report.json`.
+  Every file is listed in `manifest.json` with its SHA-256; `.gitattributes` keeps the bytes exact. The Git repository leaves out
+  `data/full/json/` and `data/full/sql/` (83 MB) — they're in the release ZIP, or run `python cli.py generate --scale full`
 - `outputs/<scale>/` — findings, recommendations, monthly bills, batch intensity, energy balance, evaluation, `metrics.json`
 - `docs/DATA_DICTIONARY.md` — every table and column, generated from `energyflex/schema.py`
 - `docs/ERD.md` — entity-relationship diagram (Mermaid)
