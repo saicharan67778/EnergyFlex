@@ -5,48 +5,76 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>EnergyFlex Dashboard</title>
 <meta name="description" content="Correlating machine telemetry, production, tariffs and weather to find energy waste and peak demand.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="styles.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
-<header class="top">
+<div class="shell">
+<aside class="side">
   <div class="brand">
-    <span class="logo" aria-hidden="true">⚡</span>
-    <div>
-      <h1>EnergyFlex</h1>
-      <p class="sub" id="subtitle">Energy waste &amp; peak demand — synthetic multi-plant dataset</p>
-    </div>
+    <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span>
+    <div><div class="bname">ENERGYFLEX</div><div class="btag">ENERGY ANALYTICS</div></div>
   </div>
-  <button id="theme" class="ghost" type="button" aria-label="Toggle colour theme">◐ Theme</button>
-</header>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-tab="overview" aria-selected="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Overview</button>
+    <button role="tab" data-tab="operator"><svg viewBox="0 0 24 24"><path d="M3 20h18M6 16V9M11 16V5M16 16v-5"/></svg>Plant operator</button>
+    <button role="tab" data-tab="engineer"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>Maintenance / quality</button>
+    <button role="tab" data-tab="planner"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Production planner</button>
+    <button role="tab" data-tab="otit"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg>OT / IT admin</button>
+    <button role="tab" data-tab="recs"><svg viewBox="0 0 24 24"><path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17v.5"/></svg>Recommendations</button>
+  </nav>
+  <div class="sidecard" id="sideCard"></div>
+</aside>
 
-<nav class="tabs" role="tablist" id="tabs">
-  <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
-  <button role="tab" data-tab="operator">Plant operator</button>
-  <button role="tab" data-tab="engineer">Maintenance / quality</button>
-  <button role="tab" data-tab="planner">Production planner</button>
-  <button role="tab" data-tab="otit">OT / IT admin</button>
-  <button role="tab" data-tab="recs">Recommendations</button>
-</nav>
+<div class="content">
+<header class="top">
+  <div>
+    <h1 id="pageTitle">Energy waste &amp; peak demand</h1>
+    <p class="sub" id="subtitle">Synthetic multi-plant dataset</p>
+  </div>
+  <div class="actions">
+    <span class="pill-btn" id="windowPill"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16"/></svg><span></span></span>
+    <span class="pill-btn" id="scopePill"></span>
+    <button id="theme" class="accent-btn" type="button" aria-label="Toggle colour theme">◐ Theme</button>
+  </div>
+</header>
 
 <main>
 <!-- OVERVIEW -->
 <section id="overview" class="panel active">
-  <div class="kpis" id="kpis"></div>
-  <div class="grid two">
+  <div class="kpis rings" id="kpis"></div>
+  <div class="grid three">
     <div class="card">
-      <h2>Acceptance criteria</h2>
-      <ul class="checks" id="acceptance"></ul>
+      <div class="cardhead"><div><h2>Findings by issue type</h2><p class="hint">Detected across all plants, ranked by count</p></div></div>
+      <div class="bars" id="findingBars"></div>
     </div>
     <div class="card">
-      <h2>Plants</h2>
-      <div class="tablewrap"><table id="plantTable"></table></div>
+      <div class="cardhead"><div><h2>Daily energy at the incomer</h2><p class="hint">kWh per local day, stacked by plant</p></div><span class="tag" id="dailyTag"></span></div>
+      <div class="chart"><canvas id="dailyChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="cardhead"><div><h2>Plant comparison</h2><p class="hint">Energy, peak demand &amp; cost by plant</p></div></div>
+      <div class="bars" id="plantBars"></div>
     </div>
   </div>
-  <div class="card">
-    <div class="cardhead"><h2>Daily energy at the incomer</h2><span class="hint">kWh per local day</span></div>
-    <div class="chart tall"><canvas id="dailyChart"></canvas></div>
+  <div class="grid three b">
+    <div class="card">
+      <div class="cardhead"><div><h2>Top recommendations</h2><p class="hint">Highest expected annual savings</p></div></div>
+      <div class="tablewrap"><table id="topRecs"></table></div>
+    </div>
+    <div class="card">
+      <div class="cardhead"><div><h2>Detection quality</h2><p class="hint">F1 vs labelled ground truth, per issue type</p></div></div>
+      <div class="bars" id="detBars"></div>
+    </div>
+    <div class="card">
+      <div class="cardhead"><div><h2>Acceptance criteria</h2><p class="hint">Checked on every build</p></div></div>
+      <ul class="alerts" id="acceptance"></ul>
+    </div>
   </div>
+  <div class="strip" id="strip"></div>
   <div class="card">
     <h2>How it works</h2>
     <ol class="flow">
@@ -65,12 +93,12 @@
   <div class="filters"><label>Plant <select class="plantSel" data-target="operator"></select></label></div>
   <div class="grid two">
     <div class="card">
-      <div class="cardhead"><h2>Average load profile</h2><span class="hint">incomer kW by local hour</span></div>
+      <div class="cardhead"><div><h2>Average load profile</h2><p class="hint">Incomer kW by local hour</p></div></div>
       <div class="chart"><canvas id="profileChart"></canvas></div>
       <p class="note" id="profileNote"></p>
     </div>
     <div class="card">
-      <div class="cardhead"><h2>Idle energy above standby</h2><span class="hint">kWh, no batch running ≥ 75 min</span></div>
+      <div class="cardhead"><div><h2>Idle energy above standby</h2><p class="hint">kWh, no batch running ≥ 75 min</p></div></div>
       <div class="chart"><canvas id="idleChart"></canvas></div>
     </div>
   </div>
@@ -84,14 +112,14 @@
 <section id="engineer" class="panel">
   <div class="filters"><label>Machine <select id="machineSel"></select></label></div>
   <div class="card">
-    <div class="cardhead"><h2>Energy intensity vs baseline</h2><span class="hint">kWh/unit ÷ (machine, product) baseline, per completed batch</span></div>
+    <div class="cardhead"><div><h2>Energy intensity vs baseline</h2><p class="hint">kWh/unit ÷ (machine, product) baseline, per completed batch</p></div></div>
     <div class="chart tall"><canvas id="intensityChart"></canvas></div>
     <p class="note" id="intensityNote"></p>
   </div>
   <div class="grid two">
     <div class="card">
-      <div class="cardhead"><h2>Off-shift utilities</h2><span class="hint">kWh/day: actual vs weather-normalised expectation</span></div>
-      <div class="filters inline"><label>Plant <select class="plantSel" data-target="engineer"></select></label></div>
+      <div class="cardhead"><div><h2>Off-shift utilities</h2><p class="hint">kWh/day: actual vs weather-normalised expectation</p></div>
+        <label>Plant <select class="plantSel" data-target="engineer"></select></label></div>
       <div class="chart"><canvas id="offChart"></canvas></div>
     </div>
     <div class="card">
@@ -105,7 +133,7 @@
 <section id="planner" class="panel">
   <div class="filters"><label>Plant <select class="plantSel" data-target="planner"></select></label></div>
   <div class="card">
-    <div class="cardhead"><h2>Daily energy by tariff period</h2><span class="hint">kWh at the incomer, plant-local time of use</span></div>
+    <div class="cardhead"><div><h2>Daily energy by tariff period</h2><p class="hint">kWh at the incomer, plant-local time of use</p></div></div>
     <div class="chart tall"><canvas id="touChart"></canvas></div>
   </div>
   <div class="grid two">
@@ -126,21 +154,21 @@
   <div class="kpis" id="dqKpis"></div>
   <div class="grid two">
     <div class="card">
-      <div class="cardhead"><h2>Detection vs ground truth</h2><span class="hint">findings matched by entity and time window</span></div>
+      <div class="cardhead"><div><h2>Detection vs ground truth</h2><p class="hint">Findings matched by entity and time window</p></div></div>
       <div class="tablewrap"><table id="evalTable"></table></div>
     </div>
     <div class="card">
-      <div class="cardhead"><h2>Validation</h2><span class="hint" id="valHint"></span></div>
+      <div class="cardhead"><div><h2>Validation</h2><p class="hint" id="valHint"></p></div></div>
       <div class="tablewrap short"><table id="valTable"></table></div>
     </div>
   </div>
   <div class="card">
     <div class="cardhead"><h2>Data-quality exceptions</h2>
-      <label class="inline">Type <select id="dqSel"></select></label></div>
+      <label>Type <select id="dqSel"></select></label></div>
     <div class="tablewrap short"><table id="dqTable"></table></div>
   </div>
   <div class="card">
-    <div class="cardhead"><h2>Energy balance per meter</h2><span class="hint">interval sum vs register span after detected offsets</span></div>
+    <div class="cardhead"><div><h2>Energy balance per meter</h2><p class="hint">Interval sum vs register span after detected offsets</p></div></div>
     <div class="tablewrap short"><table id="balTable"></table></div>
   </div>
 </section>
@@ -158,6 +186,8 @@
 <footer>
   <span id="footMeta"></span> · 100% synthetic data · <a href="https://github.com/saicharan67778/EnergyFlex" id="repoLink">source &amp; docs in the repository README</a>
 </footer>
+</div>
+</div>
 <div id="tip" role="tooltip" hidden></div>
 <script src="app.js"></script>
 </body>

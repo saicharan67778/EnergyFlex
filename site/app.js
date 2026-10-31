@@ -10,7 +10,15 @@
   const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const day = (s) => String(s).slice(0, 16).replace("T", " ");
   const PERIODS = ["OFFPEAK", "SHOULDER", "NORMAL", "PEAK"];          // fixed identity order
-  const PERIOD_VAR = { OFFPEAK: "--s1", SHOULDER: "--s3", NORMAL: "--s4", PEAK: "--s2" };
+  const PERIOD_VAR = { OFFPEAK: "--s3", SHOULDER: "--s2", NORMAL: "--s4", PEAK: "--s1" };
+  const BAR_VARS = ["--s1", "--s2", "--s5", "--s4", "--s3", "--s6"];
+  const ISSUE = { DUPLICATE_READING: "Duplicate readings", METER_GAP: "Meter gaps", UNIT_KW_AS_KWH: "kW written as kWh",
+    REGISTER_INTERVAL_MISMATCH: "Register ≠ interval sum", HIERARCHY_TOTAL_MISMATCH: "Σ sub-meters > incomer",
+    MACHINE_OUTSIDE_HIERARCHY: "Tag outside hierarchy", TARIFF_TZ_MISMATCH: "Tariff timezone",
+    HIGH_IDLE_CONSUMPTION: "High idle consumption", INTENSITY_DRIFT: "Intensity drift", OFF_SHIFT_WASTE: "Off-shift waste",
+    PEAK_DEMAND_SPIKE: "Peak demand spikes" };
+  const TITLES = { overview: "Energy waste & peak demand analytics", operator: "Plant operations", engineer: "Maintenance & quality",
+    planner: "Production planning", otit: "Data quality & integrity", recs: "Recommendations" };
   const ROLE = { plant_operator: "Plant operator", maintenance_engineer: "Maintenance / quality engineer",
     production_planner: "Production planner", ot_it_admin: "OT/IT admin" };
   const plantVar = (pid) => `--s${D.plants.findIndex((p) => p.plant_id === pid) + 1}`;
@@ -26,13 +34,39 @@
     el.innerHTML = `<thead>${head}</thead><tbody>${body || `<tr><td colspan="${cols.length}" class="hint">No rows</td></tr>`}</tbody>`;
   }
 
+  const pct = (v, d = 1) => `${fmt(v * 100, d)}%`;
+  function alpha(hex, a) {
+    const n = parseInt(hex.replace("#", ""), 16);
+    return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
+  }
+  // vertical gradient fill for area charts, resolved once the chart area is known
+  const fade = (hex) => (ctx) => {
+    const a = ctx.chart.chartArea;
+    if (!a) return alpha(hex, 0);
+    const g = ctx.chart.ctx.createLinearGradient(0, a.top, 0, a.bottom);
+    g.addColorStop(0, alpha(hex, 0.32));
+    g.addColorStop(1, alpha(hex, 0));
+    return g;
+  };
+  function ring(frac, v, txt) {
+    const c = 2 * Math.PI * 30, f = Math.max(0, Math.min(1, frac));
+    return `<div class="ring"><svg viewBox="0 0 76 76"><circle class="trk" cx="38" cy="38" r="30"/>` +
+      `<circle cx="38" cy="38" r="30" style="stroke:var(${v})" stroke-dasharray="${(f * c).toFixed(1)} ${c.toFixed(1)}"/></svg><span>${txt}</span></div>`;
+  }
+  // one labelled progress bar: width is frac (0..1)
+  const bar = (label, right, frac, v, meta = "") => `<div class="bar"><div class="row"><span>${label}</span><b style="color:var(${v})">${right}</b></div>` +
+    `<div class="track"><div class="fill" style="width:${(Math.max(0, Math.min(1, frac)) * 100).toFixed(1)}%;background:var(${v})"></div></div>` +
+    (meta ? `<div class="meta">${meta}</div>` : "") + `</div>`;
+
   function baseOpts(extra = {}) {
     const text = css("--text-2"), grid = css("--grid");
     return Object.assign({
       responsive: true, maintainAspectRatio: false, animation: false,
       interaction: { mode: "index", intersect: false },
       plugins: {
-        legend: { position: "top", align: "start", labels: { color: text, boxWidth: 10, boxHeight: 10, usePointStyle: true } },
+        legend: { position: "top", align: "start", labels: { color: text, boxWidth: 10, boxHeight: 10, usePointStyle: true,
+          // solid swatches even when the series fill is a gradient
+          generateLabels: (ch) => Chart.defaults.plugins.legend.labels.generateLabels(ch).map((l) => ({ ...l, fillStyle: typeof l.fillStyle === "string" ? l.fillStyle : l.strokeStyle })) } },
         tooltip: { backgroundColor: css("--surface"), titleColor: css("--text"), bodyColor: css("--text-2"),
           borderColor: css("--border"), borderWidth: 1, padding: 8 },
       },
@@ -52,15 +86,30 @@
   function overview() {
     const h = D.headline, ev = D.evaluation_overall, v = D.validation.summary;
     const kwh = D.daily.reduce((a, r) => a + r.kwh, 0);
+    const main = D.plant_balance.reduce((s, x) => s + x.main_kwh, 0), sub = D.plant_balance.reduce((s, x) => s + x.sum_sub_kwh, 0);
+    const demandUsd = D.bills.reduce((s, b) => s + (b.total_cost ? b.total_cost_usd * b.demand_charge / b.total_cost : 0), 0);
+    const annualCost = h.total_cost_usd * 365 / h.days;
+    const okChecks = (v.pass + v.expected_fail) / v.checks;
     const k = [
-      ["Energy at incomers", `${fmt(kwh / 1000, 0)} MWh`, `${D.plants.length} plants · ${h.days} days`],
-      ["Energy + demand cost", `$${fmt(h.total_cost_usd)}`, "fixed FX to USD"],
-      ["Expected savings", `$${fmt(h.annual_savings_usd)}/yr`, `${h.recommendations} recommendations`],
-      ["Detection F1 (macro)", fmt(ev.macro_f1, 3), `recall ${fmt(ev.micro_recall, 3)} · precision ${fmt(ev.micro_precision, 3)}`],
-      ["Validation checks", `${v.pass + v.expected_fail}/${v.checks}`, `${v.fail} unexplained failures`],
-      ["Readings", fmt(h.raw_readings), `${fmt(h.curated_readings)} after cleaning`],
+      ["Energy at incomers", `${fmt(kwh / 1000, 0)} MWh`, "--s1", sub / main, pct(sub / main, 0), `<span class="c-good">${pct(sub / main)} sub-metered</span>`, `${D.plants.length} plants · ${h.days} days`],
+      ["Energy + demand cost", `$${fmt(h.total_cost_usd)}`, "--s2", demandUsd / h.total_cost_usd, pct(demandUsd / h.total_cost_usd, 0), `<span class="c-warn">${pct(demandUsd / h.total_cost_usd)} demand charges</span>`, "fixed FX to USD"],
+      ["Expected savings", `$${fmt(h.annual_savings_usd)}`, "--s3", h.annual_savings_usd / annualCost, pct(h.annual_savings_usd / annualCost, 1), `<span class="c-good">↑ ${pct(h.annual_savings_usd / annualCost)} of annual cost</span>`, `${h.recommendations} recommendations / yr`],
+      ["Detection F1", fmt(ev.macro_f1, 3), "--s4", ev.macro_f1, fmt(ev.macro_f1, 2), `<span class="c-good">recall ${fmt(ev.micro_recall, 3)}</span>`, `precision ${fmt(ev.micro_precision, 3)}`],
+      ["Validation checks", `${v.pass + v.expected_fail}/${v.checks}`, "--s5", okChecks, pct(okChecks, 0), `<span class="${v.fail ? "c-bad" : "c-good"}">${v.fail} unexplained failures</span>`, `${v.expected_fail} expected (labelled)`],
     ];
-    $("#kpis").innerHTML = k.map(([l, val, f]) => `<div class="kpi"><div class="label">${l}</div><div class="value">${val}</div><div class="foot">${f}</div></div>`).join("");
+    $("#kpis").innerHTML = k.map(([l, val, cv, frac, rt, delta, f]) => `<div class="kpi"><div class="label">${l}</div>` +
+      `<div class="body">${ring(frac, cv, rt)}<div><div class="value">${val}</div><div class="delta">${delta}</div><div class="foot">${f}</div></div></div></div>`).join("");
+
+    const fc = Object.entries(h.findings).sort((x, y) => y[1] - x[1]);
+    const fmax = fc[0][1], ftotal = fc.reduce((s, x) => s + x[1], 0);
+    $("#findingBars").innerHTML = fc.slice(0, 7).map(([t, n], i) => bar(esc(ISSUE[t] || t), fmt(n), n / fmax, BAR_VARS[i % BAR_VARS.length])).join("") +
+      `<div class="callout">${fmt(ftotal)} findings across ${fc.length} issue types</div>`;
+
+    const ev2 = [...D.evaluation].sort((x, y) => (y.f1 ?? 0) - (x.f1 ?? 0));
+    $("#detBars").innerHTML = ev2.slice(0, 6).map((r) => {
+      const cv = r.f1 >= 0.95 ? "--good" : r.f1 >= 0.8 ? "--warning" : "--critical";
+      return bar(esc(ISSUE[r.issue_type] || r.issue_type), `F1 ${fmt(r.f1, 2)}`, r.f1, cv, `found ${fmt(r.findings)} · labelled ${fmt(r.ground_truth)}`);
+    }).join("");
 
     const a = D.acceptance;
     const items = [
@@ -73,7 +122,8 @@
       ["Recommendations cite baseline & savings", a.recommendations_cite_baseline_and_savings.pass,
         `${a.recommendations_cite_baseline_and_savings.with_baseline_value}/${a.recommendations_cite_baseline_and_savings.recommendations} with measured baseline, savings formula and evidence`],
     ];
-    $("#acceptance").innerHTML = items.map(([t, ok, d]) => `<li><span class="icon ${ok ? "" : "fail"}">${ok ? "✓" : "✕"}</span><div><div>${t} — <b>${ok ? "pass" : "fail"}</b></div><div class="detail">${esc(d)}</div></div></li>`).join("");
+    $("#acceptance").innerHTML = items.map(([t, ok, d]) => `<li><span class="ico ${ok ? "ok" : "bad"}">${ok ? "✓" : "✕"}</span>` +
+      `<div><div class="t">${t}</div><div class="detail">${esc(d)}</div></div></li>`).join("");
 
     const rows = D.plants.map((p) => {
       const b = D.bills.filter((x) => x.plant_id === p.plant_id);
@@ -81,21 +131,37 @@
       return { ...p, kwh: b.reduce((s, x) => s + x.kwh, 0), peak: Math.max(...b.map((x) => x.peak_kw)),
         cost: b.reduce((s, x) => s + x.total_cost_usd, 0), unmetered: bal.unmetered_pct };
     });
-    table($("#plantTable"), [
-      { label: "Plant", render: (r) => `<span class="badge" style="border-color:var(${plantVar(r.plant_id)})">${esc(r.plant_id)}</span> ${esc(r.plant_name)}` },
-      { label: "Timezone", key: "timezone" },
-      { label: "MWh", num: true, render: (r) => fmt(r.kwh / 1000, 1) },
-      { label: "Peak kW", num: true, render: (r) => fmt(r.peak, 0) },
-      { label: "Cost USD", num: true, render: (r) => fmt(r.cost) },
-      { label: "Unmetered %", num: true, render: (r) => fmt(r.unmetered, 1) },
-    ], rows);
+    const kmax = Math.max(...rows.map((r) => r.kwh));
+    $("#plantBars").innerHTML = rows.map((r) => bar(`${esc(r.plant_name)}`, `${fmt(r.kwh / 1000, 0)} MWh`, r.kwh / kmax, plantVar(r.plant_id),
+      `Peak ${fmt(r.peak, 0)} kW · Cost $${fmt(r.cost)} · Unmetered ${fmt(r.unmetered, 1)}%`)).join("");
+
+    const top = [...D.recommendations].sort((x, y) => y.expected_savings_usd_yr - x.expected_savings_usd_yr).slice(0, 5);
+    table($("#topRecs"), [
+      { label: "Action", render: (r) => esc(r.title) },
+      { label: "Plant", render: (r) => `<span style="color:var(${plantVar(r.plant_id)});font-weight:600">${esc(r.plant_id)}</span>` },
+      { label: "$/yr", num: true, render: (r) => `<span class="c-good">${fmt(r.expected_savings_usd_yr)}</span>` },
+      { label: "Confidence", render: (r) => `<span class="badge ${r.confidence === "HIGH" ? "ok" : "exp"}">${esc(r.confidence.toLowerCase())}</span>` },
+    ], top);
 
     const days = [...new Set(D.daily.map((r) => r.day))].sort();
-    draw("dailyChart", { type: "line", data: { labels: days, datasets: D.plants.map((p) => {
+    const totals = days.map((d) => D.daily.filter((r) => r.day === d).reduce((s, r) => s + r.kwh, 0));
+    const pk = totals.indexOf(Math.max(...totals));
+    $("#dailyTag").textContent = `Peak day ${days[pk]} · ${fmt(totals[pk] / 1000, 1)} MWh`;
+    draw("dailyChart", { type: "line", data: { labels: days, datasets: D.plants.map((p, i) => {
       const m = Object.fromEntries(D.daily.filter((r) => r.plant_id === p.plant_id).map((r) => [r.day, r.kwh]));
-      return { label: `${p.plant_id} ${p.city}`, data: days.map((d) => m[d] ?? null), borderColor: css(plantVar(p.plant_id)),
-        backgroundColor: css(plantVar(p.plant_id)), borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, tension: 0.2 };
-    }) }, options: baseOpts() });
+      const c = css(plantVar(p.plant_id));
+      return { label: `${p.plant_id} ${p.city}`, data: days.map((d) => m[d] ?? 0), borderColor: c, backgroundColor: fade(c),
+        fill: i ? "-1" : "origin", borderWidth: 1.75, pointRadius: 0, pointHoverRadius: 4, pointBackgroundColor: c, tension: 0.3 };
+    }) }, options: baseOpts({ scales: { ...baseOpts().scales, y: { ...baseOpts().scales.y, stacked: true } } }) });
+
+    const peak = rows.reduce((x, y) => (y.peak > x.peak ? y : x));
+    const best = top[0];
+    $("#strip").innerHTML = [
+      ["Energy + demand cost (" + h.days + " days)", `$${fmt(h.total_cost_usd)}`, ""],
+      ["Highest monthly peak", `${esc(peak.plant_name)} · ${fmt(peak.peak, 0)} kW`, "c-acc"],
+      ["Largest single saving", `${esc(plantName(best.plant_id))} · $${fmt(best.expected_savings_usd_yr)}/yr`, "c-good"],
+      ["Reproducible build", D.repro ? `${D.repro.reproducible ? "Yes" : "No"} · ${D.repro.files_compared} files compared` : "—", D.repro && D.repro.reproducible ? "c-good" : "c-bad"],
+    ].map(([kk, vv, cl]) => `<div><div class="k">${kk}</div><div class="v ${cl}">${vv}</div></div>`).join("");
   }
 
   // ---------------- operator ----------------
@@ -266,6 +332,7 @@
     active = tab;
     document.querySelectorAll("#tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
     document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === tab));
+    $("#pageTitle").textContent = TITLES[tab];
     renderers[tab]();
     try { localStorage.setItem("ef-tab", tab); } catch (e) { /* storage unavailable */ }
     history.replaceState(null, "", `#${tab}`);
@@ -274,6 +341,16 @@
   function init() {
     $("#subtitle").textContent = `${D.plants.length} plants · ${D.meta.row_counts.meter} meters · ${D.headline.days} days of 15-min readings · ${fmt(D.meta.row_counts.production_batch)} batches · seed ${D.meta.seed}`;
     $("#footMeta").textContent = `Window ${D.meta.window_utc.join(" → ")} · ${D.meta.generator_command}`;
+    Chart.defaults.font.family = "Inter, system-ui, sans-serif";
+    const md = (s, y) => new Date(s).toLocaleDateString("en-US", { month: "short", day: "numeric", year: y ? "numeric" : undefined, timeZone: "UTC" });
+    $("#windowPill span").textContent = `${md(D.meta.window_utc[0])} – ${md(D.meta.window_utc[1], true)}`;
+    $("#scopePill").textContent = `${D.plants.length} plants · ${D.meta.row_counts.meter} meters`;
+    const h = D.headline, v = D.validation.summary;
+    const high = D.recommendations.filter((r) => r.confidence === "HIGH").reduce((s, r) => s + r.expected_savings_usd_yr, 0);
+    $("#sideCard").innerHTML = `<div class="k">Savings potential</div><div class="v">$${fmt(h.annual_savings_usd)}<span class="hint"> /yr</span></div>` +
+      bar("", "", high / h.annual_savings_usd, "--accent") +
+      `<div class="t">${pct(high / h.annual_savings_usd, 0)} from high-confidence actions</div>` +
+      `<div class="ok-text" style="color:var(${v.fail ? "--critical" : "--good"})"><span class="dot" style="background:currentColor"></span>Validation: ${v.fail ? `${v.fail} failures` : "all explained"}</div>`;
     const popts = D.plants.map((p) => `<option value="${p.plant_id}">${p.plant_id} · ${esc(p.plant_name)}</option>`).join("");
     document.querySelectorAll(".plantSel").forEach((s) => {
       s.innerHTML = popts;
@@ -290,15 +367,17 @@
     $("#ownerSel").addEventListener("change", recs);
     $("#recPlantSel").addEventListener("change", recs);
     document.querySelectorAll("#tabs button").forEach((b) => b.addEventListener("click", () => show(b.dataset.tab)));
+    try { if (localStorage.getItem("ef-theme") === "light") document.documentElement.setAttribute("data-theme", "light"); } catch (e) { /* storage unavailable */ }
     $("#theme").addEventListener("click", () => {
-      const cur = document.documentElement.getAttribute("data-theme") ||
-        (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-      document.documentElement.setAttribute("data-theme", cur === "dark" ? "light" : "dark");
+      const next = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", next);
+      try { localStorage.setItem("ef-theme", next); } catch (e) { /* storage unavailable */ }
       renderers[active]();
     });
     let start = location.hash.slice(1);
     if (!renderers[start]) { try { start = localStorage.getItem("ef-tab") || "overview"; } catch (e) { start = "overview"; } }
     show(renderers[start] ? start : "overview");
+    window.scrollTo(0, 0); // the #tab hash matches a section id, which would otherwise scroll past the header
   }
 
   fetch("data/dashboard.json").then((r) => r.json()).then((d) => { D = d; init(); })
