@@ -202,12 +202,14 @@ checklist. - Helped diagnose packaging gaps in an earlier archive and
 identify the regeneration workflow. - Helped interpret test, validation,
 and reproducibility output.
 
-**Candidate review / validation:** - Regenerated the full-scale outputs
-using the project CLI workflow. - Reviewed the reproducibility output:
-38 files compared, row counts equal, no checksum mismatches. - Reviewed
-the final archive for the expected full-scale CSV, JSON, SQL,
-ground-truth, documentation, and dashboard files. - Ran the test suite
-against the final archive; the recorded result was **27 passed**. -
+**Candidate review / validation:** - Requested regeneration of the
+full-scale outputs using the project CLI workflow and reviewed the
+results. - Reviewed the reproducibility output: 38 files compared, row
+counts equal, no checksum mismatches. - Requested a check of the final
+archive for the expected full-scale CSV, JSON, SQL, ground-truth,
+documentation, and dashboard files, and reviewed the outcome. -
+Requested the test suite be run against the final archive and reviewed
+the result: **27 passed**. -
 Reviewed the validation summary: **283 checks, 275 PASS, 8
 EXPECTED_FAIL, 0 FAIL**.
 
@@ -258,15 +260,17 @@ completed:
 
 -   Reviewed the challenge requirements and used them to assess the
     project scope.
--   Inspected the project archive and its documentation, data exports,
+-   Reviewed the project archive and its documentation, data exports,
     and dashboard assets.
--   Checked the presence of full-scale CSV, JSON, SQL, and ground-truth
-    exports in the final archive.
--   Regenerated the full-scale project outputs using the documented CLI
-    workflow.
+-   Acted on review feedback that full-scale exports were missing from
+    an earlier archive, and requested a permanent fix and a verified
+    rebuild.
+-   Requested regeneration of the full-scale outputs using the
+    documented CLI workflow and reviewed the results.
 -   Reviewed deterministic reproducibility results, including row counts
     and checksums.
--   Ran the final test suite and confirmed 27 passing tests.
+-   Requested the final test suite run and reviewed the result: 27
+    passing tests.
 -   Reviewed the validation summary and distinguished expected injected
     anomalies from unexpected failures.
 -   Considered the limitations of evaluating detection metrics on
