@@ -91,7 +91,7 @@ h2 { font-size: 15px; margin: 0 0 12px; font-weight: 800; letter-spacing: .02em;
 
 /* ---------- KPI tiles ---------- */
 .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; margin-bottom: 18px; }
-.kpis.rings { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.kpis.rings { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; box-shadow: var(--shadow); min-width: 0; }
 .kpi .label { color: var(--text-2); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .kpi .value { font-size: 24px; font-weight: 800; letter-spacing: -.01em; margin-top: 4px; font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -173,6 +173,22 @@ table:not(#topRecs) td:not(:last-child) { white-space: nowrap; }
 footer { color: var(--muted); font-size: 12px; text-align: center; padding: 16px 28px 28px; margin-top: auto; }
 
 /* ---------- responsive ---------- */
+@media (max-width: 1500px) {
+  .kpis.rings .kpi { padding: 14px; }
+  .kpis.rings .body { gap: 10px; }
+  .kpis.rings .ring { width: 58px; height: 58px; }
+  .kpis.rings .ring span { font-size: 11px; }
+  .kpis.rings .value { font-size: 19px; }
+  .kpis.rings .label { font-size: 11px; letter-spacing: .05em; }
+}
+@media (max-width: 1340px) {
+  .kpis.rings { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .kpis.rings { grid-template-columns: minmax(0, 1fr); }
+  .kpis.rings .ring { width: 70px; height: 70px; }
+  .kpis.rings .value { font-size: 24px; }
+}
 @media (max-width: 1280px) {
   .grid.three, .grid.three.b { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .grid.three > .card:nth-child(2) { grid-column: 1 / -1; order: -1; }
