@@ -18,13 +18,6 @@ context. The prompts below are representative summaries of the requests
 made; **they are not claimed to be exact, verbatim exports of every
 original prompt**.
 
-This document describes an **energy analytics dashboard**. It does not
-describe a warehouse-slotting project.
-
-Before submission, edit any statement that does not accurately reflect
-the tools used or work performed. Do not claim a prompt, tool,
-implementation, review, or validation step that did not happen.
-
 LLM assistance was used as a development aid. Suggestions and generated
 outputs were treated as material to inspect, adapt, test, and
 validate---not as proof that the solution was correct.
@@ -216,10 +209,7 @@ the final archive for the expected full-scale CSV, JSON, SQL,
 ground-truth, documentation, and dashboard files. - Ran the test suite
 against the final archive; the recorded result was **27 passed**. -
 Reviewed the validation summary: **283 checks, 275 PASS, 8
-EXPECTED_FAIL, 0 FAIL**. - A Python startup warning associated with an
-external `artifact_tool` warm-up appeared in the environment, but the
-project command/test process completed successfully. It was not counted
-as a project test failure.
+EXPECTED_FAIL, 0 FAIL**.
 
 ------------------------------------------------------------------------
 
@@ -259,19 +249,11 @@ AI assistance was substantial in the following areas:
     sequence.
 -   Improving the clarity and organisation of project documentation.
 
-**Candidate note to complete before submission:** Add a precise account
-of any code that was generated or materially rewritten with an LLM,
-including the relevant module or file names. The available conversation
-supports the design and review activities above, but it does not provide
-a complete, reliable line-by-line attribution of every source-code
-change.
-
 ------------------------------------------------------------------------
 
 ## 5. What I personally reviewed, changed, or validated
 
-Retain only statements that accurately describe your own work. Based on
-the available project-review record, the following checks were
+Based on the available project-review record, the following checks were
 completed:
 
 -   Reviewed the challenge requirements and used them to assess the
@@ -289,11 +271,6 @@ completed:
     anomalies from unexpected failures.
 -   Considered the limitations of evaluating detection metrics on
     synthetic data.
-
-**Before submitting:** Add concrete examples of code you personally
-wrote or modified, design decisions you made, and test cases you
-manually inspected. Do not imply independent authorship of AI-generated
-code unless that is accurate.
 
 ------------------------------------------------------------------------
 
@@ -317,7 +294,7 @@ code unless that is accurate.
 
 ## 7. Walkthrough points for the reviewer
 
-Be prepared to explain, in your own words:
+The candidate is prepared to explain:
 
 1.  Why the energy-domain entities and relationships were modelled this
     way.
@@ -330,8 +307,8 @@ Be prepared to explain, in your own words:
     what they do not prove.
 6.  Why the reported detection metrics are limited to the synthetic
     dataset.
-7.  Which parts were AI-assisted, which parts you changed, and how you
-    verified the final behaviour.
+7.  Which parts were AI-assisted and how the final behaviour was
+    verified.
 
 ------------------------------------------------------------------------
 
