@@ -11,8 +11,9 @@ generated with a fixed seed.
 pip install -r requirements.txt
 python cli.py all --scale starter      # 2 plants, 7 days: generate, validate, repro-check, analyze
 python cli.py all --scale full         # 20 meters, 90 days, 2,000 batches (+ builds site/data)
-python -m pytest -q                    # 25 tests
+python -m pytest -q                    # 27 tests
 python -m http.server -d site 8000     # dashboard
+python cli.py package                  # release ZIP -> dist/EnergyFlex.zip (--out PATH), verified against both manifests
 ```
 Seed: `20261022` (`--seed N` to change). Generator command and checksums: `data/<scale>/manifest.json`.
 
@@ -22,7 +23,7 @@ Seed: `20261022` (`--seed N` to change). Generator command and checksums: `data/
 - `energyflex/analytics/` — quality gate, reconciliation, tariff costing, intensity, waste, recommendations, evaluation
 - `data/<scale>/` — `csv/`, `json/`, `sql/schema.sql` + `seed.sql`, `ground_truth/` (kept separate), `manifest.json`, `validation_summary.md`, `repro_report.json`.
   Every file is listed in `manifest.json` with its SHA-256; `.gitattributes` keeps the bytes exact. The Git repository leaves out
-  `data/full/json/` and `data/full/sql/` (83 MB) — they're in the release ZIP, or run `python cli.py generate --scale full`
+  `data/full/json/` and `data/full/sql/` (83 MB) — `python cli.py package` adds them to the release ZIP and rejects the ZIP unless every manifest file is present with a matching checksum; or run `python cli.py generate --scale full`
 - `outputs/<scale>/` — findings, recommendations, monthly bills, batch intensity, energy balance, evaluation, `metrics.json`
 - `docs/DATA_DICTIONARY.md` — every table and column, generated from `energyflex/schema.py`
 - `docs/ERD.md` — entity-relationship diagram (Mermaid)

@@ -118,15 +118,15 @@ def write_dataset(tables, gt, meta, root, formats=("csv", "json", "sql")):
         if "json" in formats:
             p = root / "json" / f"{name}.json"
             p.parent.mkdir(parents=True, exist_ok=True)
-            p.write_text(df.to_json(orient="records", indent=None, double_precision=6), encoding="utf-8")
+            p.write_text(df.to_json(orient="records", indent=None, double_precision=6), encoding="utf-8", newline="\n")
             record(p, len(df))
     if "sql" in formats:
         p = root / "sql" / "schema.sql"
         p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text(ddl(frames), encoding="utf-8")
+        p.write_text(ddl(frames), encoding="utf-8", newline="\n")
         record(p)
         p = root / "sql" / "seed.sql"
-        p.write_text(seed_sql(frames), encoding="utf-8")
+        p.write_text(seed_sql(frames), encoding="utf-8", newline="\n")
         record(p)
 
     gtf = format_table(gt, schema.GROUND_TRUTH_FIELDS)
@@ -135,7 +135,7 @@ def write_dataset(tables, gt, meta, root, formats=("csv", "json", "sql")):
     gtf.to_csv(gdir / "ground_truth.csv", index=False, lineterminator="\n")
     record(gdir / "ground_truth.csv", len(gtf))
     (gdir / "ground_truth.json").write_text(gtf.to_json(orient="records", indent=1, double_precision=6),
-                                            encoding="utf-8")
+                                            encoding="utf-8", newline="\n")
     record(gdir / "ground_truth.json", len(gtf))
 
     manifest = {
@@ -147,5 +147,5 @@ def write_dataset(tables, gt, meta, root, formats=("csv", "json", "sql")):
         "row_counts": {name: len(df) for name, df in frames.items()} | {"ground_truth": len(gtf)},
         "files": sorted(files, key=lambda f: f["path"]),
     }
-    (root / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    (root / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8", newline="\n")
     return manifest

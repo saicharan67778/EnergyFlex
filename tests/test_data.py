@@ -3,7 +3,7 @@ import sqlite3
 
 import pandas as pd
 
-from energyflex import ids, io, schema, validate
+from energyflex import config, ids, io, schema, validate
 from energyflex.export import write_dataset
 from energyflex.generate import generate
 
@@ -80,3 +80,18 @@ def test_different_seed_differs(tmp_path):
     t1, _, _ = generate("starter", seed=1)
     t2, _, _ = generate("starter", seed=2)
     assert not t1["energy_reading"]["interval_kwh"].equals(t2["energy_reading"]["interval_kwh"])
+
+
+def test_exports_use_lf_on_every_os(starter):
+    # checksums in manifest.json must not depend on the platform's newline convention
+    for f in starter["manifest"]["files"]:
+        assert b"\r\n" not in (starter["data"] / f["path"]).read_bytes(), f["path"]
+
+
+def test_committed_data_matches_manifest():
+    # catches checkout/line-ending rewrites; files kept out of Git (data/full/json, sql) are checked by `cli.py package`
+    import cli
+    present = {f"data/{s}/{p.relative_to(cli.data_dir(s)).as_posix()}" for s in config.SCALES
+               for p in cli.data_dir(s).rglob("*") if p.is_file()}
+    bad = [x for x in cli.manifest_problems(lambda p: (cli.ROOT / p).read_bytes(), present) if x.startswith("checksum")]
+    assert not bad, bad

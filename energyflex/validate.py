@@ -264,7 +264,7 @@ def write_report(rows, root):
     root = Path(root)
     summary = summarize(rows)
     (root / "validation_summary.json").write_text(json.dumps({"summary": summary, "checks": rows}, indent=2,
-                                                             default=str), encoding="utf-8")
+                                                             default=str), encoding="utf-8", newline="\n")
     lines = ["# Validation summary", "",
              f"**{summary['checks']} checks** — PASS {summary['pass']}, EXPECTED_FAIL {summary['expected_fail']} "
              f"(every failure is a labelled anomaly in ground_truth), FAIL {summary['fail']}.", "",
@@ -273,5 +273,5 @@ def write_report(rows, root):
     for r in sorted(rows, key=lambda r: (rank[r["status"]], r["category"], r["check"])):
         lines.append(f"| {r['status']} | `{r['check']}` | {r['category']} | {r['failures']} | "
                      f"{r['explained_by_ground_truth']} |")
-    (root / "validation_summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (root / "validation_summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
     return summary

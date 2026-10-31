@@ -144,8 +144,8 @@
     },
     {
       "path": "ground_truth/ground_truth.json",
-      "bytes": 229687,
-      "sha256": "547733bc2f17947d85de4e00e37f0127fa1044d0373b414d37c7de3e59a04ca0",
+      "bytes": 222910,
+      "sha256": "235394550acbe6b86f030c6268395b73710c58792d19ed88d6f5b9543d4b71b7",
       "rows": 484
     },
     {
@@ -252,14 +252,14 @@
     },
     {
       "path": "sql/schema.sql",
-      "bytes": 7534,
-      "sha256": "be00eb2ec485cf2ce2df148c6225a0b91a74647281be51fde2d0d8ec55583de9",
+      "bytes": 7312,
+      "sha256": "608cfad8716503fa619fffa151b2afab7a606505abb3a1607c55a6d7a305cdf7",
       "rows": null
     },
     {
       "path": "sql/seed.sql",
-      "bytes": 31754550,
-      "sha256": "1fa8dc1f7df14489520a1b161c8e7d438d71725be60a2749c063f396faea7021",
+      "bytes": 31554615,
+      "sha256": "28b2cd52f6584c72d7efaec286a6e9cb1e9192d21c5c3f0926a280fd35f285a7",
       "rows": null
     }
   ]

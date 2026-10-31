@@ -111,4 +111,4 @@ def build(data_root, out_root, site_root):
         "plant_balance": pbal.to_dict("records"),
     }
     site_root.mkdir(parents=True, exist_ok=True)
-    (site_root / "dashboard.json").write_text(json.dumps(_clean(out), separators=(",", ":"), default=str, allow_nan=False), encoding="utf-8")
+    (site_root / "dashboard.json").write_text(json.dumps(_clean(out), separators=(",", ":"), default=str, allow_nan=False), encoding="utf-8", newline="\n")

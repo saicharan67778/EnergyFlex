@@ -4,3 +4,4 @@ data/full/json/
 data/full/sql/
 outputs/full/readings_curated.csv
 .vercel
+dist/

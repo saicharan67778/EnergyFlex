@@ -44,7 +44,7 @@
     "csv/tariff_window.csv": "eec615373991e376b22480c90510fde76997db4dd105727e1af0c0a3239c1ce4",
     "csv/weather_observation.csv": "e888693dc132e682891244d1f04b62cc5c3d9c623f920d714ace3e71771247a8",
     "ground_truth/ground_truth.csv": "71b3dc609c28335bcd7182360fc815041b81ae7450997e5acea264d9d66baaff",
-    "ground_truth/ground_truth.json": "51aac504a5c0daf978903b76c17f7238518dd63ba377cc5969db5a9fb477aa73",
+    "ground_truth/ground_truth.json": "44117c44295e611b74e805987403a550c1b6dc06636d0c87861db516f4fc7c5b",
     "json/batch_status_event.json": "169017889dbe6e704a0e16e86e6f97544f802ede6511f342265e9aa720ad49dc",
     "json/energy_reading.json": "354bc539e77095a080741fccfbcdb19a22bc1162da5d5654713dc678abbfb54f",
     "json/machine.json": "f0df489fae922c992c188f04391d153a3cf413d6b06299c69fe1876888f27558",
@@ -62,8 +62,8 @@
     "json/tariff.json": "359e1c061c0467926f4c9367153c7b3c120f7c35483950b04272249e95c712dd",
     "json/tariff_window.json": "725e9889b5acc5ded94b6a39ab25844d1afa388d3301acd1353260f4cc247286",
     "json/weather_observation.json": "611b13daf5ce4e0499240d5b577c604540069f5e1513d0099075fa082082576a",
-    "sql/schema.sql": "be00eb2ec485cf2ce2df148c6225a0b91a74647281be51fde2d0d8ec55583de9",
-    "sql/seed.sql": "fa7ada834f17eaef656c1e3c8e4b3e363ba29396d2927a2af101a522bcce15ae"
+    "sql/schema.sql": "608cfad8716503fa619fffa151b2afab7a606505abb3a1607c55a6d7a305cdf7",
+    "sql/seed.sql": "410d649adeff3b67083522500ccd0add5a705df8a3d4c67257dcf71ce691242f"
   },
   "matches_committed_dataset": true
 }

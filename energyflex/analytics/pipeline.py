@@ -110,6 +110,6 @@ def run(data_root, out_root):
     (out_root / "metrics.json").write_text(json.dumps({"headline": headline, "acceptance": acceptance,
                                                       "evaluation_overall": overall,
                                                       "evaluation_by_issue": per_type.to_dict("records"),
-                                                      "currencies": cur}, indent=2, default=str), encoding="utf-8")
+                                                      "currencies": cur}, indent=2, default=str), encoding="utf-8", newline="\n")
     return {"headline": headline, "findings": findings, "recs": recs, "bi": bi, "bills": bills, "cr": cr,
             "per_type": per_type, "acceptance": acceptance, "offshift": offshift, "d": d}

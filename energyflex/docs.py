@@ -27,4 +27,4 @@ def render(path):
             "Kept outside `csv/`, never loaded by the analytics (only by `evaluate.py` after all findings exist).", "",
             "| Field | Type | Required | Unique | Allowed values | Unit | Validation rule | Description |",
             "|---|---|---|---|---|---|---|---|"] + [_row(f) for f in schema.GROUND_TRUTH_FIELDS] + [""]
-    Path(path).write_text("\n".join(out), encoding="utf-8")
+    Path(path).write_text("\n".join(out), encoding="utf-8", newline="\n")
