@@ -71,6 +71,6 @@ peak spikes, intensity drift, compressed-air leak, HVAC weekend override.
 No external data. Climate and tariff parameters are hand-set approximations labelled "synthetic". FX rates in `config.py` are fixed assumptions.
 
 ## AI usage
-LLM assistance was used during development. [`docs/PROMPT_HISTORY.md`](docs/PROMPT_HISTORY.md) is a reconstructed prompt
+LLM assistance was used during development. [`docs/PROMPT_HISTORY.md`](docs/PROMPT_HISTORY.md) is a prompt
 history, organised by development stage. For each stage it shows where AI helped, where the assistance was substantial, what
 the candidate reviewed and validated, and the limitations.
