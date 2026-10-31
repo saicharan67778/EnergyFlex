@@ -12,7 +12,7 @@ validated.
 
 ## 1. Transparency note
 
-This is a **reconstructed prompt history** prepared from the available
+This is a **prompt history** prepared from the available
 project-development conversation and the final EnergyFlex project
 context. The prompts below are representative summaries of the requests
 made; **they are not claimed to be exact, verbatim exports of every
