@@ -1,0 +1,3 @@
+# Data and outputs are checksummed in data/<scale>/manifest.json: keep bytes exactly as generated (LF).
+data/** -text
+outputs/** -text
