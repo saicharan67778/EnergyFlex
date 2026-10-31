@@ -29,7 +29,7 @@ Seed: `20261022` (`--seed N` to change). Generator command and checksums: `data/
 - `docs/ERD.md` — entity-relationship diagram (Mermaid)
 - `docs/RULES.md` — generation, labelling and detection rules with their thresholds
 - `docs/PROVENANCE.md` — data sources (none external) and lawful-use notes
-- `docs/PROMPT_HISTORY.md` — AI usage disclosure and verbatim prompt log
+- `docs/PROMPT_HISTORY.md` — AI prompt history and usage disclosure
 - `site/` — static dashboard (`index.html`, `styles.css`, `app.js`, `data/dashboard.json`), deployed on Vercel
 
 ## How the data is generated
@@ -71,5 +71,6 @@ peak spikes, intensity drift, compressed-air leak, HVAC weekend override.
 No external data. Climate and tariff parameters are hand-set approximations labelled "synthetic". FX rates in `config.py` are fixed assumptions.
 
 ## AI usage
-Built with Claude Code (Anthropic) as the AI coding assistant, directed by the candidate. [`docs/PROMPT_HISTORY.md`](docs/PROMPT_HISTORY.md)
-records every prompt verbatim, what each was meant to achieve, what was produced, and how the result was verified.
+LLM assistance was used during development. [`docs/PROMPT_HISTORY.md`](docs/PROMPT_HISTORY.md) is a reconstructed prompt
+history, organised by development stage. For each stage it shows where AI helped, where the assistance was substantial, what
+the candidate reviewed and validated, and the limitations.
